@@ -9,6 +9,7 @@ import {removeUserFromLocalStorage} from "../helpers";
 
 export default function Header(){
     const {user} = useUser();
+
     const router = useRouter();
 
     const handleLogout = () => {
