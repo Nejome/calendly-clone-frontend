@@ -1,14 +1,28 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faAngleDown, faCopy, faGear, faPen, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faAngleDown, faCopy, faGear, faPen, faTrash, faCheck} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import {Menu} from "@headlessui/react";
+import {APP_ROUTES} from "../utils/constants";
+import {useState} from "react";
 
-export default function EventType(){
+export default function EventType({eventType}){
+    const [copied, setCopied] = useState(false);
+
+    const handleCopyEventTypeLink = () => {
+        navigator.clipboard.writeText(`${window.location.origin}/${APP_ROUTES.SCHEDULE_EVENT}/${eventType.id}`);
+
+        setCopied(true);
+
+        setTimeout(() => {
+            setCopied(false);
+        }, 2000);
+    }
+
     return (
-        <div className="border border-[#cccccc] shadow rounded">
+        <div className="border border-[#cccccc] shadow rounded relative hover:top-[-1px] hover:shadow-lg hover:cursor-pointer">
             <div className="p-4">
                 <div className="flex justify-between items-center relative">
-                    <h3 className="text-[#1a1a1a] text-xl">Event Type Title</h3>
+                    <h3 className="text-[#1a1a1a] text-xl">{eventType.name}</h3>
                     <Menu>
                         <Menu.Button className="text-sm px-2 py-3 rounded hover:bg-gray-200 flex gap-1">
                             <FontAwesomeIcon icon={faGear} />
@@ -35,19 +49,27 @@ export default function EventType(){
                     </Menu>
                 </div>
 
-                <p className="mt-1 text-sm text-[#757575]">30 mins, 14 Dec 2022 - 16 Dec 2022</p>
+                <p className="mt-1 text-sm text-[#757575]">{eventType.duration} mins, {eventType.from} - {eventType.to}</p>
 
-                <Link href="#" className="text-blue-600 text-sm hover:underline block mt-3">View booking page</Link>
+                <Link href={`${APP_ROUTES.SCHEDULE_EVENT}/${eventType.id}`} className="text-blue-600 text-sm hover:underline block mt-3">View booking page</Link>
             </div>
             <hr />
             <div className="p-4">
-                <div className="flex justify-between items-center">
-                    <button className="text-blue-600 hover:underline flex items-center gap-1 text-sm">
-                        <FontAwesomeIcon icon={faCopy} />
-                        <span>Copy link</span>
+                <div className="flex justify-center items-center">
+                    <button onClick={handleCopyEventTypeLink} className="text-blue-600 flex items-center gap-1 text-sm">
+                        {copied
+                            ?
+                            <>
+                                <FontAwesomeIcon icon={faCheck} />
+                                <span>Copied</span>
+                            </>
+                            :
+                            <>
+                                <FontAwesomeIcon icon={faCopy} />
+                                <span>Copy link</span>
+                            </>
+                        }
                     </button>
-
-                    <button className="flex items-center gap-2 px-5 py-[6px] text-sm border border-blue-600 text-blue-600 hover:bg-blue-100 transition-all rounded-3xl">Share</button>
                 </div>
             </div>
         </div>
