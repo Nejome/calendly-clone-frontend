@@ -1,12 +1,13 @@
 import Head from "next/head";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock, faCamera, faCalendar, faCircleNotch} from "@fortawesome/free-solid-svg-icons";
+import {faClock, faVideo, faCalendar, faCircleNotch} from "@fortawesome/free-solid-svg-icons";
 import 'react-modern-calendar-datepicker-fix/lib/DatePicker.css';
 import {Calendar} from 'react-modern-calendar-datepicker-fix';
 import {useEffect, useState} from "react";
 import http from "../../services/http";
 import {API_ROUTES, APP_ROUTES} from "../../utils/constants";
 import {useRouter} from "next/router";
+import Link from "next/link";
 
 export default function ScheduleEvent() {
     const router = useRouter();
@@ -15,6 +16,7 @@ export default function ScheduleEvent() {
     const [error, setError] = useState(null);
     const [eventType, setEventType] = useState(null);
     const [slots, setSLots] = useState([]);
+    const [slotsFetching, setSlotsFetching] = useState(false);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -28,9 +30,7 @@ export default function ScheduleEvent() {
 
                 const response = await http.get(`${API_ROUTES.EVENT_TYPES_GET_SINGLE}/${eventTypeId}`);
 
-                setEventType(response.data.eventType);
-
-                setSLots(response.data.slots);
+                setEventType(response.data);
 
                 setLoading(false);
             }
@@ -38,6 +38,22 @@ export default function ScheduleEvent() {
             getSingleEventType();
         }
     }, [eventTypeId]);
+
+    useEffect(() => {
+        if(day){
+            const getSLots = async () => {
+                setSlotsFetching(true);
+
+                const response = await http.get(`${API_ROUTES.EVENT_TYPES_GET_TIME_SLOTS}/${eventType.id}?day=${day.year}-${day.month}-${day.day}`);
+
+                setSLots(response.data);
+
+                setSlotsFetching(false);
+            }
+
+            getSLots();
+        }
+    }, [day]);
 
     const canSubmit = () => {
         return (
@@ -82,10 +98,19 @@ export default function ScheduleEvent() {
 
             <main>
                 <div className="container mx-auto p-4">
-                    {loading && <div className="text-blue-600 text-3xl text-center pt-14"><FontAwesomeIcon icon={faCircleNotch} className="spinner" /></div>}
+                    <div className="mx-auto mt-10 flex justify-center mb-5">
+                        <Link href="#">
+                            <h1 className="text-3xl text-blue-600 flex items-center gap-2">
+                                <img src="/logo.svg" />
+                                <span>Calendly</span>
+                            </h1>
+                        </Link>
+                    </div>
+
+                    {(loading && !canSubmit()) && <div className="text-blue-600 text-3xl text-center pt-14"><FontAwesomeIcon icon={faCircleNotch} className="spinner" /></div>}
 
                     {error &&
-                        <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                        <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800 mt-3" role="alert">
                             {error}
                         </div>
                     }
@@ -104,7 +129,7 @@ export default function ScheduleEvent() {
                                         </p>
 
                                         <p className="flex gap-3 items-center text-[#1a1a1a9c] text-lg mt-3">
-                                            <FontAwesomeIcon icon={faCamera} />
+                                            <FontAwesomeIcon icon={faVideo} />
                                             Web conferencing
                                         </p>
 
@@ -136,6 +161,8 @@ export default function ScheduleEvent() {
                                     </div>
                                     {day &&
                                         <div className="w-full lg:w-1/2 h-full grid grid-cols-2 gap-2 overflow-auto">
+                                            {slotsFetching && <div className="text-blue-600 text-3xl text-center pt-14"><FontAwesomeIcon icon={faCircleNotch} className="spinner" /></div>}
+
                                             {slots.map((slot, i) => (
                                                 <button key={i} onClick={() => setTime(slot)} className={`text-blue-600 col-span-1 bg-white border border-blue-600 rounded py-2 text-lg transition-all ${time === slot ? `bg-blue-600 text-white` : `hover:bg-blue-100`}`}>{slot}</button>
                                             ))}

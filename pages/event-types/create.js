@@ -74,13 +74,6 @@ export default function Create() {
             <main className="mt-5">
                 <div className="container mx-auto p-5">
                     <div className="border border-[#666a73] rounded px-7 pt-10 pb-7 bg-white w-full lg:w-9/12 mx-auto mt-5">
-                        {(user && !user.zoom_account_connected) &&
-                            <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
-                                Sorry, you can not create event type without connect your zoom account.
-                                <Link href={`https://zoom.us/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_ZOOM_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_ZOOM_REDIRECT_URL}`} class="underline inline-block ml-1">Connect</Link>
-                            </div>
-                        }
-
                         <form onSubmit={handleSubmit(onSubmit)}>
                             {error &&
                                 <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
@@ -115,7 +108,7 @@ export default function Create() {
                                 </div>
                             </div>
                             <div className="mt-10 text-center">
-                                <button type="submit" className="bg-blue-600 mx-auto text-white hover:bg-blue-700 rounded-2xl px-4 py-2 transition-all flex gap-3 justify-center items-center disabled:bg-blue-500" disabled={loading || (user && !user.zoom_account_connected)}>
+                                <button type="submit" className="bg-blue-600 mx-auto text-white hover:bg-blue-700 rounded-2xl px-4 py-2 transition-all flex gap-3 justify-center items-center disabled:bg-blue-500" disabled={loading}>
                                     Save
                                     {loading && <FontAwesomeIcon icon={faCircleNotch} className="spinner" />}
                                 </button>
