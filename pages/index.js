@@ -10,11 +10,13 @@ import {useEffect, useState} from "react";
 import {getAuthenticatedUser} from "../helpers";
 import {useRouter} from "next/router";
 import http from "../services/http";
+import {useUser} from "../hooks";
 
 export default function Home() {
     const router = useRouter();
     const [eventTypes, setEventTypes] = useState([]);
     const [loading, setLoading] = useState(false);
+    const {user} = useUser();
 
     useEffect(() => {
         const authenticatedUser = getAuthenticatedUser();
@@ -25,18 +27,24 @@ export default function Home() {
     }, [router]);
 
     useEffect(() => {
-        const getEventTypes = async () => {
-            setLoading(true);
+        if(user) {
+            const getEventTypes = async () => {
+                setLoading(true);
 
-            const response = await http.get(`${API_ROUTES.EVENT_TYPES_LIST}`);
+                const response = await http.get(`${API_ROUTES.EVENT_TYPES_LIST}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`
+                    }
+                });
 
-            setEventTypes(response.data);
+                setEventTypes(response.data);
 
-            setLoading(false);
+                setLoading(false);
+            }
+
+            getEventTypes();
         }
-
-        getEventTypes();
-    }, [])
+    }, [user])
 
   return (
     <div>
