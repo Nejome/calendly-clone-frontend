@@ -26,7 +26,7 @@ export default function Register() {
         };
 
         redirectIfAuthenticated();
-    }, []);
+    }, [router]);
 
     const { register, handleSubmit, formState:{ errors } } = useForm({
         resolver: yupResolver(schema)
