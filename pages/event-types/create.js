@@ -26,7 +26,7 @@ export default function Home() {
         if (!authenticatedUser) {
             router.push(APP_ROUTES.LOGIN);
         }
-    }, []);
+    }, [router]);
 
     const { register, handleSubmit, formState:{ errors } } = useForm({
         resolver: yupResolver(schema)

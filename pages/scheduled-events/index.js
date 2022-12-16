@@ -4,14 +4,25 @@ import Nav from "../../components/Nav";
 import Link from "next/link";
 import {useEffect} from "react";
 import http from "../../services/http";
-import {API_ROUTES} from "../../utils/constants";
+import {API_ROUTES, APP_ROUTES} from "../../utils/constants";
 import {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons";
+import {getAuthenticatedUser} from "../../helpers";
+import {useRouter} from "next/router";
 
 export default function ScheduledEvents() {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        const authenticatedUser = getAuthenticatedUser();
+
+        if (!authenticatedUser) {
+            router.push(APP_ROUTES.LOGIN);
+        }
+    }, [router]);
 
     useEffect(() => {
         const getEventsList = async () => {

@@ -16,17 +16,17 @@ export default function Register() {
     const [error, setError] = useState(null);
     const router = useRouter();
 
-    const redirectIfAuthenticated = () => {
-        const authenticatedUser = getAuthenticatedUser();
-
-        if (authenticatedUser) {
-            router.push(APP_ROUTES.HOME);
-        }
-    };
-
     useEffect(() => {
+        const redirectIfAuthenticated = () => {
+            const authenticatedUser = getAuthenticatedUser();
+
+            if (authenticatedUser) {
+                router.push(APP_ROUTES.HOME);
+            }
+        };
+
         redirectIfAuthenticated();
-    }, []);
+    }, [router]);
 
     const { register, handleSubmit, formState:{ errors } } = useForm({
         resolver: yupResolver(schema)
