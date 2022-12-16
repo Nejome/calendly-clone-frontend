@@ -3,13 +3,22 @@ import Link from "next/link";
 import {APP_ROUTES, API_ROUTES} from "../../utils/constants";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import {schema} from './register-validation';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons";
 import {useState, useEffect} from "react";
 import http from "../../services/http";
 import {useRouter} from "next/router";
 import {getAuthenticatedUser, storeUserInLocalStorage} from "../../helpers";
+import * as yup from "yup";
+
+export const schema = yup.object({
+    name: yup.string().required('The name field is required'),
+    email: yup.string().email('The email field must valid email address').required('The email field is required'),
+    password: yup.string().required('The password field is required'),
+    password_confirmation: yup.string()
+        .oneOf([yup.ref('password'), null], 'The password confirmation does not match')
+        .required('The password confirmation field is required'),
+}).required();
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
