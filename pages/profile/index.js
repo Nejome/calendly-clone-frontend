@@ -44,7 +44,11 @@ export default function Profile() {
         setLoading(true);
 
         try {
-            const response = await http.put(`${API_ROUTES.UPDATE_PROFILE}`, data);
+            const response = await http.put(`${API_ROUTES.UPDATE_PROFILE}`, data, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            });
 
             storeUserInLocalStorage({...user, name: data.name, email: data.email});
 

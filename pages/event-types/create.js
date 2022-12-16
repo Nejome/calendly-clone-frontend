@@ -43,7 +43,11 @@ export default function Create() {
         setLoading(true);
 
         try {
-            const response = await http.post(`${API_ROUTES.STORE_EVENT_TYPE}`, data);
+            const response = await http.post(`${API_ROUTES.STORE_EVENT_TYPE}`, data, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            });
 
             router.push(APP_ROUTES.HOME);
         }
