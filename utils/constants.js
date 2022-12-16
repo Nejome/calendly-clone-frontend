@@ -6,10 +6,11 @@ export const API_ROUTES = {
     STORE_EVENT_TYPE: '/event-types/store',
     EVENT_TYPES_LIST: '/event-types/list',
     EVENT_TYPES_GET_SINGLE: '/event-types/get-single',
+    EVENT_TYPES_GET_TIME_SLOTS: '/event-types/get-time-slots',
 
     STORE_EVENT: '/events/store',
-    EVENT_LIST: 'events/list',
-    EVENT_GET_SINGLE: 'events/get-single/',
+    EVENT_LIST: '/events/list',
+    EVENT_GET_SINGLE: '/events/get-single',
 }
 
 export const APP_ROUTES = {

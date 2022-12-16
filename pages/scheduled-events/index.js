@@ -77,7 +77,7 @@ export default function ScheduledEvents() {
                                             </div>
                                             <div>{row.invited_email}</div>
                                             <div>
-                                                <Link href="#" className="text-blue-600 hover:underline">Join now</Link>
+                                                <Link href={row.start_url} className="text-blue-600 hover:underline">Join now</Link>
                                             </div>
                                         </div>
                                     )})}
