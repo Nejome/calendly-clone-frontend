@@ -10,11 +10,13 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons";
 import {getAuthenticatedUser} from "../../helpers";
 import {useRouter} from "next/router";
+import {useUser} from "../../hooks";
 
 export default function ScheduledEvents() {
     const [events, setEvents] = useState(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const {user} = useUser();
 
     useEffect(() => {
         const authenticatedUser = getAuthenticatedUser();
@@ -25,18 +27,24 @@ export default function ScheduledEvents() {
     }, [router]);
 
     useEffect(() => {
-        const getEventsList = async () => {
-            setLoading(true);
+        if(user){
+            const getEventsList = async () => {
+                setLoading(true);
 
-            const response = await http.get(`${API_ROUTES.EVENT_LIST}`);
+                const response = await http.get(`${API_ROUTES.EVENT_LIST}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`
+                    }
+                });
 
-            setEvents(response.data);
+                setEvents(response.data);
 
-            setLoading(false);
+                setLoading(false);
+            }
+
+            getEventsList();
         }
-
-        getEventsList();
-    }, []);
+    }, [user]);
 
     return (
         <div>
@@ -60,7 +68,7 @@ export default function ScheduledEvents() {
 
                     {loading && <div className="text-blue-600 text-3xl text-center pt-14"><FontAwesomeIcon icon={faCircleNotch} className="spinner" /></div>}
 
-                    {events &&
+                    {(events && Object.keys(events).length > 0) &&
                         <div className="mt-10 border border-[#1a1a1a1a] rounded w-full lg:w-10/12 mx-auto text-[#1c1c1c] bg-white">
                             {Object.keys(events).map(day => {return (
                                 <>
