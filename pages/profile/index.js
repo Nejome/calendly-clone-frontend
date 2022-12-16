@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import {getAuthenticatedUser, storeUserInLocalStorage} from "../../helpers";
 import {API_ROUTES, APP_ROUTES} from "../../utils/constants";
 import {useUser} from "../../hooks";
-import {schema} from "./profile-validation";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import http from "../../services/http";
@@ -14,6 +13,14 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import * as yup from "yup";
+
+export const schema = yup.object({
+    name: yup.string().required('The name field is required'),
+    email: yup.string().email('The email field must valid email address').required('The email field is required'),
+    password_confirmation: yup.string()
+        .oneOf([yup.ref('password'), null], 'The password confirmation does not match')
+}).required();
 
 export default function Profile() {
     const router = useRouter();

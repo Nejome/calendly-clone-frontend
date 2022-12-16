@@ -8,8 +8,13 @@ import {useRouter} from "next/router";
 import {getAuthenticatedUser, storeUserInLocalStorage} from "../../helpers";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {schema} from "./login-validation";
 import http from "../../services/http";
+import * as yup from "yup";
+
+export const schema = yup.object({
+    email: yup.string().email('The email field must valid email address').required('The email field is required'),
+    password: yup.string().required('The password field is required'),
+}).required();
 
 export default function Login() {
     const [loading, setLoading] = useState(false);

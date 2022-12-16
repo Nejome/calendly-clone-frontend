@@ -7,14 +7,21 @@ import {getAuthenticatedUser, storeUserInLocalStorage} from "../../helpers";
 import {API_ROUTES, APP_ROUTES} from "../../utils/constants";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {schema} from "./event-type-validation";
 import http from "../../services/http";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleNotch} from "@fortawesome/free-solid-svg-icons";
 import {useUser} from "../../hooks";
 import Link from "next/link";
+import * as yup from "yup";
 
-export default function Home() {
+export const schema = yup.object({
+    name: yup.string().required('The name field is required'),
+    from: yup.string().required('The from field is required'),
+    to: yup.string().required('The to field is required'),
+    duration: yup.string().required('The duration field is required')
+}).required();
+
+export default function Create() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
