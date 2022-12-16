@@ -22,7 +22,7 @@ export default function Home() {
         if (!authenticatedUser) {
             router.push(APP_ROUTES.LOGIN);
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const getEventTypes = async () => {
